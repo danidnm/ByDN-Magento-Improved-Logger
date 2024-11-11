@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Add processor to logger, to add some more util info -->
+    <type name="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="bydn_improved_logger_extra_info" xsi:type="object">Bydn\ImprovedLogger\Processor\Extrainfo</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Log handler to send alerts -->
+    <type name="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers"  xsi:type="array">
+                <item name="bydn_improved_notification_alerts" xsi:type="object">Bydn\ImprovedLogger\Handler\Notification</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

@@ -23,6 +23,11 @@ class Notification extends \Monolog\Handler\AbstractHandler
     private $loggerConfig;
 
     /**
+     * @var \Bydn\ImprovedLogger\Model\Email
+     */
+    private $emailSender;
+
+    /**
      * @var \Bydn\ImprovedLogger\Model\Telegram
      */
     private $telegramSender;
@@ -32,9 +37,11 @@ class Notification extends \Monolog\Handler\AbstractHandler
      */
     public function __construct(
         \Bydn\ImprovedLogger\Helper\Config $loggerConfig,
+        \Bydn\ImprovedLogger\Model\Email $emailSender,
         \Bydn\ImprovedLogger\Model\Telegram $telegramSender
     ) {
         $this->loggerConfig = $loggerConfig;
+        $this->emailSender = $emailSender;
         $this->telegramSender = $telegramSender;
     }
 
@@ -57,10 +64,9 @@ class Notification extends \Monolog\Handler\AbstractHandler
             if ($this->loggerConfig->isEmailNotificationEnabled()) {
                 $this->telegramSender->sendTelegramMessage($text);
             }
-            // FIXME: Enviar por email
-//            if ($this->loggerConfig->isTelegramNotificationEnabled()) {
-//                $this->se->sendTelegramE($text);
-//            }
+            if ($this->loggerConfig->isTelegramNotificationEnabled()) {
+                $this->emailSender->sendAlertEmail('Magento Log Alert', $text);
+            }
         }
 
         return $this->bubble;

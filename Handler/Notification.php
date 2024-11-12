@@ -15,7 +15,7 @@ class Notification extends \Monolog\Handler\AbstractHandler
     /**
      * @var bool
      */
-    protected $bubble = true;
+    protected $bubble = false;
 
     /**
      * @var \Bydn\ImprovedLogger\Helper\Config
@@ -44,14 +44,24 @@ class Notification extends \Monolog\Handler\AbstractHandler
      */
     public function handle(array $record): bool
     {
-        $text = $record['message'];
-        if (isset($record['context'])) {
-            foreach ($record['context'] as $key => $value) {
-                $text = $text . " | " . $key . ' => ' . (!is_array($value) ? $value : 'array');
+        if (
+            $this->loggerConfig->isEmailNotificationEnabled() &&
+            $this->loggerConfig->isTelegramNotificationEnabled()
+        ) {
+            $text = $record['message'];
+            if (isset($record['context'])) {
+                foreach ($record['context'] as $key => $value) {
+                    $text = $text . " | " . $key . ' => ' . (!is_array($value) ? $value : 'array');
+                }
             }
+            if ($this->loggerConfig->isEmailNotificationEnabled()) {
+                $this->telegramSender->sendTelegramMessage($text);
+            }
+            // FIXME: Enviar por email
+//            if ($this->loggerConfig->isTelegramNotificationEnabled()) {
+//                $this->se->sendTelegramE($text);
+//            }
         }
-        $this->telegramSender->sendTelegramMessage($text);
-        $this->telegramSender->sendTelegramMessage($text);
 
         return $this->bubble;
     }

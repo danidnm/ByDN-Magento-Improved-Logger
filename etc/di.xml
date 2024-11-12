@@ -11,13 +11,9 @@
         </arguments>
     </type>
 
-    <!-- Log handler to send alerts -->
+    <!-- Add log handler to send alerts (this does not work with a parameter definition because it removes other handles) -->
     <type name="Magento\Framework\Logger\Monolog">
-        <arguments>
-            <argument name="handlers"  xsi:type="array">
-                <item name="bydn_improved_notification_alerts" xsi:type="object">Bydn\ImprovedLogger\Handler\Notification</item>
-            </argument>
-        </arguments>
+        <plugin name="bydn_improved_logger_add_handler" type="Bydn\ImprovedLogger\Plugin\Magento\Framework\Logger\Monolog" />
     </type>
 
 </config>

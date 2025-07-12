@@ -3,20 +3,10 @@
 namespace Bydn\ImprovedLogger\Handler;
 
 use Monolog\Logger;
+use Monolog\LogRecord;
 
 class Notification extends \Monolog\Handler\AbstractHandler
 {
-    /**
-     * Log minimum handling level
-     * @var int
-     */
-    protected $level = Logger::ERROR;
-
-    /**
-     * @var bool
-     */
-    protected $bubble = false;
-
     /**
      * @var \Bydn\ImprovedLogger\Helper\Config
      */
@@ -49,7 +39,7 @@ class Notification extends \Monolog\Handler\AbstractHandler
      * @param array $record
      * @return bool
      */
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (
             $this->loggerConfig->isEmailNotificationEnabled() &&

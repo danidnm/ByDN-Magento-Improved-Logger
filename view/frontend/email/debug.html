@@ -1,0 +1,17 @@
+<!--@subject {{trans "%subject" subject=$subject}} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<tr>
+    <td class="block-email-information">
+        <p class="text" style="font-family: sans-serif; font-size: 1em; color: black;">{{var message|raw}}</p>
+    </td>
+</tr>
+
+<tr>
+    <td class="block-email-information">
+        <p class="text" style="font-family: sans-serif; font-size: 1em; color: black;">{{var trace|raw}}</p>
+    </td>
+</tr>
+
+{{template config_path="design/email/footer_template"}}

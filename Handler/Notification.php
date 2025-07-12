@@ -41,6 +41,12 @@ class Notification extends \Monolog\Handler\AbstractHandler
      */
     public function handle(LogRecord $record): bool
     {
+        // Only notify emergencies and critical
+        if ($record->level->isLowerThan(\Monolog\Level::Alert)) {
+            return $this->bubble;
+        }
+
+        // Check if notifications are enabled
         if (
             $this->loggerConfig->isEmailNotificationEnabled() &&
             $this->loggerConfig->isTelegramNotificationEnabled()
@@ -52,10 +58,10 @@ class Notification extends \Monolog\Handler\AbstractHandler
                 }
             }
             if ($this->loggerConfig->isEmailNotificationEnabled()) {
-                $this->telegramSender->sendTelegramMessage($text);
+                //$this->telegramSender->sendTelegramMessage($text);
             }
             if ($this->loggerConfig->isTelegramNotificationEnabled()) {
-                $this->emailSender->sendAlertEmail('Magento Log Alert', $text);
+                //$this->emailSender->sendAlertEmail('Magento Log Alert', $text);
             }
         }
 

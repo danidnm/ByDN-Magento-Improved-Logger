@@ -58,27 +58,27 @@ class Extrainfo
         }
 
         // Create context array
-        if (!isset($record['context']) || !is_array($record['context'])) {
-            $record['context'] = [];
+        if (!is_array($record->extra)) {
+            $record->extra = [];
         }
 
         // Add IP addresses
         if ($this->loggerConfig->isExtrainfoIpEnabled()) {
-            $record['context']['remote_address'] = $this->remoteAddress->getRemoteAddress() ?: 'unknown';
-            $record['context']['server_address'] = $this->serverAddress->getServerAddress() ?: 'unknown';
-            $record['context']['client_ip'] = $this->request->getClientIp() ?: 'unknown';
+            $record->extra['remote_address'] = $this->remoteAddress->getRemoteAddress() ?: 'unknown';
+            $record->extra['server_address'] = $this->serverAddress->getServerAddress() ?: 'unknown';
+            $record->extra['client_ip'] = $this->request->getClientIp() ?: 'unknown';
         }
 
         // Controller info
         if ($this->loggerConfig->isExtrainfoControllerEnabled()) {
-            $record['context']['module'] = $this->request->getControllerModule() ?: 'unknown';
-            $record['context']['controller'] = $this->request->getControllerModule() ?: 'unknown';
-            $record['context']['action'] = $this->request->getControllerModule() ?: 'unknown';
+            $record->extra['module'] = $this->request->getControllerModule() ?: 'unknown';
+            $record->extra['controller'] = $this->request->getControllerModule() ?: 'unknown';
+            $record->extra['action'] = $this->request->getControllerModule() ?: 'unknown';
         }
 
         // URL info
         if ($this->loggerConfig->isExtrainfoUrlEnabled()) {
-            $record['context']['url'] = $this->url->getCurrentUrl() ?: 'unknown';
+            $record->extra['url'] = $this->url->getCurrentUrl() ?: 'unknown';
         }
 
         // Trace info
@@ -87,8 +87,8 @@ class Extrainfo
             $trace = $e->getTrace();
             $callInfo = $trace[3] ?? null;
             if ($callInfo) {
-                $record['context']['file'] = $callInfo['file'] ?? 'unknown';
-                $record['context']['line'] = $callInfo['line'] ?? 'unknown';
+                $record->extra['file'] = $callInfo['file'] ?? 'unknown';
+                $record->extra['line'] = $callInfo['line'] ?? 'unknown';
             }
         }
 

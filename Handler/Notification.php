@@ -2,8 +2,10 @@
 
 namespace Bydn\ImprovedLogger\Handler;
 
+use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
+use Psr\Log\LoggerInterface;
 
 class Notification extends \Monolog\Handler\AbstractHandler
 {
@@ -23,13 +25,24 @@ class Notification extends \Monolog\Handler\AbstractHandler
     private $telegramSender;
 
     /**
+     * @param LoggerInterface $logger
      * @param \Bydn\ImprovedLogger\Helper\Config $loggerConfig
+     * @param \Bydn\ImprovedLogger\Model\Email $emailSender
+     * @param \Bydn\ImprovedLogger\Model\Telegram $telegramSender
+     * @param int|string|Level $level
+     * @param bool $bubble
+     * @param bool $includeExtra
      */
     public function __construct(
+        \Psr\Log\LoggerInterface $logger,
         \Bydn\ImprovedLogger\Helper\Config $loggerConfig,
         \Bydn\ImprovedLogger\Model\Email $emailSender,
-        \Bydn\ImprovedLogger\Model\Telegram $telegramSender
+        \Bydn\ImprovedLogger\Model\Telegram $telegramSender,
+        int|string|Level $level = Level::Emergency,
+        bool $bubble = false,
+        bool $includeExtra = false
     ) {
+        parent::__construct($level, $bubble);
         $this->loggerConfig = $loggerConfig;
         $this->emailSender = $emailSender;
         $this->telegramSender = $telegramSender;
@@ -42,8 +55,8 @@ class Notification extends \Monolog\Handler\AbstractHandler
     public function handle(LogRecord $record): bool
     {
         // Only notify emergencies and critical
-        if ($record->level->isLowerThan(\Monolog\Level::Alert)) {
-            return $this->bubble;
+        if (!$this->isHandling($record)) {
+            return false;
         }
 
         // Check if notifications are enabled
@@ -58,10 +71,10 @@ class Notification extends \Monolog\Handler\AbstractHandler
                 }
             }
             if ($this->loggerConfig->isEmailNotificationEnabled()) {
-                //$this->telegramSender->sendTelegramMessage($text);
+                $this->telegramSender->sendTelegramMessage($text);
             }
             if ($this->loggerConfig->isTelegramNotificationEnabled()) {
-                //$this->emailSender->sendAlertEmail('Magento Log Alert', $text);
+                $this->emailSender->sendAlertEmail('Magento Log Alert', $text);
             }
         }
 

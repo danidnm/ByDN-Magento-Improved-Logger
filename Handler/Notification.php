@@ -61,7 +61,7 @@ class Notification extends \Monolog\Handler\AbstractHandler
 
         // Check if notifications are enabled
         if (
-            $this->loggerConfig->isEmailNotificationEnabled() &&
+            $this->loggerConfig->isEmailNotificationEnabled() ||
             $this->loggerConfig->isTelegramNotificationEnabled()
         ) {
             $text = $record['message'];

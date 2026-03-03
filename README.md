@@ -36,7 +36,7 @@ Navigate to `Stores > Configuration > Utilities (by DN) > Improved Logger` to ma
 ## Installation
 
 ```bash
-composer require bydn/module-improved-logger
+composer require bydn/improved-logger
 bin/magento module:enable Bydn_ImprovedLogger
 bin/magento setup:upgrade
 bin/magento cache:flush

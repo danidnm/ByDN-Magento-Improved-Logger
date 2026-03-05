@@ -2,9 +2,7 @@
 
 namespace Bydn\ImprovedLogger\Handler;
 
-use Monolog\Level;
 use Monolog\Logger;
-use Monolog\LogRecord;
 use Psr\Log\LoggerInterface;
 
 class Notification extends \Monolog\Handler\AbstractHandler
@@ -38,7 +36,7 @@ class Notification extends \Monolog\Handler\AbstractHandler
         \Bydn\ImprovedLogger\Helper\Config $loggerConfig,
         \Bydn\ImprovedLogger\Model\Email $emailSender,
         \Bydn\ImprovedLogger\Model\Telegram $telegramSender,
-        int|string|Level $level = Level::Emergency,
+        $level = Logger::EMERGENCY,
         bool $bubble = false,
         bool $includeExtra = false
     ) {
@@ -49,13 +47,20 @@ class Notification extends \Monolog\Handler\AbstractHandler
     }
 
     /**
-     * @param array $record
+     * @param array|\Monolog\LogRecord $record
      * @return bool
      */
-    public function handle(LogRecord $record): bool
+    public function handle($record): bool
     {
-        // Only notify emergencies and critical
-        if (!$this->isHandling($record)) {
+        // For compatibility with Monolog 2 and 3
+        // In Monolog 3, isHandling() expects a LogRecord object.
+        // If we are in Monolog 3 (Level class exists) and $record is an array, we handle it manually
+        if (is_array($record) && class_exists('\Monolog\Level')) {
+            $recordLevel = Logger::toMonologLevel($record['level']);
+            if ($recordLevel->value < $this->level->value) {
+                return false;
+            }
+        } elseif (!$this->isHandling($record)) {
             return false;
         }
 

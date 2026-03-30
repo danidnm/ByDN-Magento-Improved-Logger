@@ -16,4 +16,12 @@
         <plugin name="bydn_improved_logger_add_handler" type="Bydn\ImprovedLogger\Plugin\Magento\Framework\Logger\Monolog" />
     </type>
 
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="bydn_logger_alert" xsi:type="object">Bydn\ImprovedLogger\Console\Command\SendAlert</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>

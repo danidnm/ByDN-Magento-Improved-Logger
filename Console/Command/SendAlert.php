@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Bydn\ImprovedLogger\Model\Email;
 use Magento\Framework\Console\Cli;
 
-class SendAlertEmailCommand extends Command
+class SendAlert extends Command
 {
     private const SUBJECT_OPTION = 'subject';
     private const BODY_OPTION = 'body';

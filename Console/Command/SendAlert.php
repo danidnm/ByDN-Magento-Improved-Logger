@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Bydn\ImprovedLogger\Console\Command;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Bydn\ImprovedLogger\Model\Email;
 use Magento\Framework\Console\Cli;
 
 class SendAlert extends Command
@@ -17,7 +17,7 @@ class SendAlert extends Command
     private const CHANNEL_OPTION = 'channel';
 
     /**
-     * @var Email
+     * @var \Bydn\ImprovedLogger\Model\Email
      */
     private $email;
 
@@ -27,17 +27,25 @@ class SendAlert extends Command
     private $telegram;
 
     /**
-     * @param Email $email
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param \Bydn\ImprovedLogger\Model\Email $email
      * @param \Bydn\ImprovedLogger\Model\Telegram $telegram
+     * @param LoggerInterface $logger
      * @param string|null $name
      */
     public function __construct(
-        Email $email,
+        \Bydn\ImprovedLogger\Model\Email $email,
         \Bydn\ImprovedLogger\Model\Telegram $telegram,
+        LoggerInterface $logger,
         ?string $name = null
     ) {
         $this->email = $email;
         $this->telegram = $telegram;
+        $this->logger = $logger;
         parent::__construct($name);
     }
 
@@ -75,6 +83,7 @@ class SendAlert extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->logger->emergency('SendAlert console command executed.');
         $channel = $input->getOption(self::CHANNEL_OPTION) ? strtolower((string)$input->getOption(self::CHANNEL_OPTION)) : 'email';
         $subject = $input->getOption(self::SUBJECT_OPTION);
         $body = $input->getOption(self::BODY_OPTION);

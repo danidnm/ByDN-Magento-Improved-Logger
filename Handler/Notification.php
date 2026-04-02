@@ -3,7 +3,6 @@
 namespace Bydn\ImprovedLogger\Handler;
 
 use Monolog\Logger;
-use Psr\Log\LoggerInterface;
 
 class Notification extends \Monolog\Handler\AbstractHandler
 {
@@ -23,22 +22,18 @@ class Notification extends \Monolog\Handler\AbstractHandler
     private $telegramSender;
 
     /**
-     * @param LoggerInterface $logger
      * @param \Bydn\ImprovedLogger\Helper\Config $loggerConfig
      * @param \Bydn\ImprovedLogger\Model\Email $emailSender
      * @param \Bydn\ImprovedLogger\Model\Telegram $telegramSender
      * @param int|string|Level $level
      * @param bool $bubble
-     * @param bool $includeExtra
      */
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
         \Bydn\ImprovedLogger\Helper\Config $loggerConfig,
         \Bydn\ImprovedLogger\Model\Email $emailSender,
         \Bydn\ImprovedLogger\Model\Telegram $telegramSender,
         $level = Logger::EMERGENCY,
-        bool $bubble = false,
-        bool $includeExtra = false
+        bool $bubble = false
     ) {
         parent::__construct($level, $bubble);
         $this->loggerConfig = $loggerConfig;
